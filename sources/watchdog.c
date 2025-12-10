@@ -86,12 +86,12 @@ void od_watchdog_worker(void *arg)
 
 	/* Main state machine loop */
 	while (state != OD_WATCHDOG_SHUTDOWN_HANDOFF && state != OD_WATCHDOG_ERROR) {
-		od_log(&instance->logger, "watchdog", NULL, NULL,
-		       "FSM state: %s", od_watchdog_state_name(state));
-
 		switch (state) {
 		case OD_WATCHDOG_INIT:
 			/* Open lock files */
+			od_log(&instance->logger, "watchdog", NULL, NULL,
+			       "FSM: %s", od_watchdog_state_name(state));
+			
 			fd_ctrl = od_get_control_lock(instance->config.locks_dir);
 			if (fd_ctrl == -1) {
 				od_error(&instance->logger, "watchdog", NULL, NULL,
@@ -120,6 +120,11 @@ void od_watchdog_worker(void *arg)
 
 		case OD_WATCHDOG_ACQUIRING_CTRL:
 			/* Try to acquire control lock (non-blocking) */
+			if (iterations == 0) {
+				od_log(&instance->logger, "watchdog", NULL, NULL,
+				       "FSM: %s → ACQUIRING_CTRL", od_watchdog_state_name(state));
+			}
+			
 			if (flock(fd_ctrl, LOCK_EX | LOCK_NB) == 0) {
 				od_log(&instance->logger, "watchdog", NULL, NULL,
 				       "control lock acquired after %d iterations", iterations);
@@ -138,17 +143,18 @@ void od_watchdog_worker(void *arg)
 
 		case OD_WATCHDOG_ACQUIRING_EXEC:
 			/* Try to acquire execution lock (non-blocking) while holding ctrl lock */
+			if (iterations == 0) {
+				od_log(&instance->logger, "watchdog", NULL, NULL,
+				       "FSM: ACQUIRING_CTRL → ACQUIRING_EXEC");
+			}
+			
 			if (flock(fd_exec, LOCK_EX | LOCK_NB) == 0) {
 				od_log(&instance->logger, "watchdog", NULL, NULL,
 				       "execution lock acquired after %d iterations", iterations);
 				od_log(&instance->logger, "watchdog", NULL, NULL,
-				       "both locks acquired, transitioning to MONITORING state");
+				       "FSM: ACQUIRING_EXEC → MONITORING");
 				
-				/* Release control lock before entering monitoring */
-				flock(fd_ctrl, LOCK_UN | LOCK_NB);
-				od_log(&instance->logger, "watchdog", NULL, NULL,
-				       "control lock released, ready to detect new instances");
-				
+				/* Keep control lock held initially to give new instances time to start */
 				state = OD_WATCHDOG_MONITORING;
 				iterations = 0;
 			} else {
@@ -166,11 +172,21 @@ void od_watchdog_worker(void *arg)
 			/* Monitor for new instances by trying to acquire control lock */
 			iterations++;
 			
+			/* On first iteration, release ctrl lock to allow new instances to signal */
+			if (iterations == 1) {
+				flock(fd_ctrl, LOCK_UN | LOCK_NB);
+				od_log(&instance->logger, "watchdog", NULL, NULL,
+				       "control lock released, ready to detect new instances");
+			}
+			
+			/* Try to acquire ctrl lock - if held by another instance, we detected them */
 			if (flock(fd_ctrl, LOCK_EX | LOCK_NB) == -1) {
 				/* Control lock is held by new instance - begin handoff */
 				od_log(&instance->logger, "watchdog", NULL, NULL,
 				       "new instance detected (ctrl lock held, errno=%d) after %d monitoring cycles",
 				       errno, iterations);
+				od_log(&instance->logger, "watchdog", NULL, NULL,
+				       "FSM: MONITORING → SHUTDOWN_HANDOFF");
 				state = OD_WATCHDOG_SHUTDOWN_HANDOFF;
 			} else {
 				/* No new instance yet, release lock and continue monitoring */
@@ -195,8 +211,7 @@ void od_watchdog_worker(void *arg)
 	/* Final state handling */
 	if (state == OD_WATCHDOG_SHUTDOWN_HANDOFF) {
 		od_log(&instance->logger, "watchdog", NULL, NULL,
-		       "FSM state: %s - releasing execution lock for handoff",
-		       od_watchdog_state_name(state));
+		       "releasing execution lock for handoff");
 		
 		flock(fd_exec, LOCK_UN | LOCK_NB);
 		close(fd_exec);
@@ -207,8 +222,7 @@ void od_watchdog_worker(void *arg)
 		kill(instance->pid.pid, OD_SIG_GRACEFUL_SHUTDOWN);
 	} else if (state == OD_WATCHDOG_ERROR) {
 		od_log(&instance->logger, "watchdog", NULL, NULL,
-		       "FSM state: %s - shutting down due to error",
-		       od_watchdog_state_name(state));
+		       "FSM: ERROR - shutting down");
 		
 		if (instance->config.graceful_die_on_errors) {
 			kill(instance->pid.pid, OD_SIG_GRACEFUL_SHUTDOWN);
