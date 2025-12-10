@@ -23,9 +23,9 @@ void od_watchdog_worker(void *arg)
 {
 	od_instance_t *instance = arg;
 
+	const char *locks_dir = instance->config.locks_dir == NULL ? ODYSSEY_DEFAULT_LOCK_DIR : instance->config.locks_dir;
 	od_log(&instance->logger, "watchdog", NULL, NULL,
-	       "watchdog worker started, locks_dir=%s", 
-	       instance->config.locks_dir == NULL ? ODYSSEY_DEFAULT_LOCK_DIR : instance->config.locks_dir);
+	       "watchdog worker started, locks_dir=%s", locks_dir);
 
 	int fd_ctrl = od_get_control_lock(instance->config.locks_dir);
 	if (fd_ctrl == -1) {
@@ -63,6 +63,17 @@ void od_watchdog_worker(void *arg)
 		return;
 	}
 
+	/* Log the actual lock file paths for verification */
+	char ctrl_lock_path[ODYSSEY_LOCK_MAXPATH];
+	char exec_lock_path[ODYSSEY_LOCK_MAXPATH];
+	snprintf(ctrl_lock_path, sizeof(ctrl_lock_path), "%s/%s:%d", 
+	         locks_dir, ODYSSEY_LOCK_PREFIX, ODYSSEY_CTRL_LOCK_HASH);
+	snprintf(exec_lock_path, sizeof(exec_lock_path), "%s/%s:%d", 
+	         locks_dir, ODYSSEY_LOCK_PREFIX, ODYSSEY_EXEC_LOCK_HASH);
+	
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "using lock files: ctrl='%s' exec='%s'", ctrl_lock_path, exec_lock_path);
+
 	od_log(&instance->logger, "watchdog", NULL, NULL,
 	       "attempting to acquire control lock (fd=%d)", fd_ctrl);
 	od_dbg_printf_on_dvl_lvl(1, "try to acquire ctrl lock %d\n", fd_ctrl);
@@ -71,8 +82,8 @@ void od_watchdog_worker(void *arg)
 	for (;;) {
 		if (flock(fd_ctrl, LOCK_EX | LOCK_NB) == 0) {
 			od_log(&instance->logger, "watchdog", NULL, NULL,
-			       "control lock acquired successfully after %d iterations", 
-			       ctrl_wait_iterations);
+			       "control lock '%s' acquired successfully after %d iterations", 
+			       ctrl_lock_path, ctrl_wait_iterations);
 			od_dbg_printf_on_dvl_lvl(1, "acquire ctrl lock ok %d\n",
 						 fd_ctrl);
 			break;
@@ -94,8 +105,8 @@ void od_watchdog_worker(void *arg)
 	for (;;) {
 		if (flock(fd_exec, LOCK_EX | LOCK_NB) == 0) {
 			od_log(&instance->logger, "watchdog", NULL, NULL,
-			       "execution lock acquired successfully after %d iterations", 
-			       exec_wait_iterations);
+			       "execution lock '%s' acquired successfully after %d iterations", 
+			       exec_lock_path, exec_wait_iterations);
 			od_dbg_printf_on_dvl_lvl(1, "acquire exec lock ok %d\n",
 						 fd_exec);
 			break;
@@ -114,8 +125,8 @@ void od_watchdog_worker(void *arg)
 	 * the old instance's monitoring loop detects our presence before we release it.
 	 */
 	od_log(&instance->logger, "watchdog", NULL, NULL,
-	       "holding control lock for %dms to signal presence to old instance", 
-	       ODYSSEY_WATCHDOG_ITER_INTERVAL);
+	       "holding control lock '%s' for %dms to signal presence to old instance", 
+	       ctrl_lock_path, ODYSSEY_WATCHDOG_ITER_INTERVAL);
 	machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL);
 
 	/*
@@ -123,7 +134,7 @@ void od_watchdog_worker(void *arg)
 	 * This allows the next instance to detect us and initiate a handoff.
 	 */
 	od_log(&instance->logger, "watchdog", NULL, NULL,
-	       "releasing control lock to allow new instances to detect us");
+	       "releasing control lock '%s' to allow new instances to detect us", ctrl_lock_path);
 	flock(fd_ctrl, LOCK_UN | LOCK_NB);
 	
 	od_log(&instance->logger, "watchdog", NULL, NULL,
@@ -138,8 +149,8 @@ void od_watchdog_worker(void *arg)
 		if (lock_result == -1) {
 			/* Another new instance has started, we need to gracefully shutdown */
 			od_log(&instance->logger, "watchdog", NULL, NULL,
-			       "detected new instance starting (ctrl lock held by new instance, errno=%d), initiating graceful shutdown", 
-			       errno);
+			       "detected new instance starting (ctrl lock '%s' held by new instance, errno=%d), initiating graceful shutdown", 
+			       ctrl_lock_path, errno);
 			od_dbg_printf_on_dvl_lvl(1, "failed to acquire ctrl lock (errno: %d), releasing exec lock %d\n",
 						 errno, fd_exec);
 			break;
@@ -155,18 +166,19 @@ void od_watchdog_worker(void *arg)
 			       monitoring_iterations);
 		}
 		
-		/* Hold the lock briefly to increase chance of collision with new instance */
-		machine_sleep(100);
+		/* Hold the lock for most of the interval to maximize collision probability
+		 * with new instances attempting to start */
+		machine_sleep(400);
 		
 		flock(fd_ctrl, LOCK_UN | LOCK_NB);
 
-		od_dbg_printf_on_dvl_lvl(1, "watchdog worker sleep for %d ms\n",
-					 ODYSSEY_WATCHDOG_ITER_INTERVAL - 100);
-		machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL - 100);
+		/* Brief sleep without lock to yield to system */
+		od_dbg_printf_on_dvl_lvl(1, "watchdog worker sleep for %d ms\n", 100);
+		machine_sleep(100);
 	}
 	
 	od_log(&instance->logger, "watchdog", NULL, NULL,
-	       "releasing execution lock for handoff to new instance");
+	       "releasing execution lock '%s' for handoff to new instance", exec_lock_path);
 	flock(fd_exec, LOCK_UN | LOCK_NB);
 	close(fd_exec);
 	close(fd_ctrl);
