@@ -654,19 +654,12 @@ int od_system_start(od_system_t *system, od_global_t *global)
 	system->global = global;
 	od_instance_t *instance = global->instance;
 	
-	od_log(&instance->logger, "system", NULL, NULL,
-	       "creating system machine coroutine");
-	
 	system->machine = machine_create("system", od_system, system);
 	if (system->machine == -1) {
 		od_error(&instance->logger, "system", NULL, NULL,
 			 "failed to create system thread");
 		return -1;
 	}
-	
-	od_log(&instance->logger, "system", NULL, NULL,
-	       "system machine coroutine created successfully (id=%ld)", 
-	       system->machine);
 	
 	return 0;
 }
