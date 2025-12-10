@@ -155,11 +155,14 @@ void od_watchdog_worker(void *arg)
 			       monitoring_iterations);
 		}
 		
+		/* Hold the lock briefly to increase chance of collision with new instance */
+		machine_sleep(100);
+		
 		flock(fd_ctrl, LOCK_UN | LOCK_NB);
 
 		od_dbg_printf_on_dvl_lvl(1, "watchdog worker sleep for %d ms\n",
-					 ODYSSEY_WATCHDOG_ITER_INTERVAL);
-		machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL);
+					 ODYSSEY_WATCHDOG_ITER_INTERVAL - 100);
+		machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL - 100);
 	}
 	
 	od_log(&instance->logger, "watchdog", NULL, NULL,
