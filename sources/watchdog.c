@@ -143,6 +143,7 @@ void od_watchdog_worker(void *arg)
 	 * This ensures subsequent handoffs work identically to the first handoff,
 	 * where the new instance must wait for the exec lock.
 	 */
+	const int monitoring_check_interval_ms = 100; /* Check 5x per iteration */
 	const int exec_lock_grace_period_ms = 30000; /* 30 seconds */
 	od_log(&instance->logger, "watchdog", NULL, NULL,
 	       "will release execution lock after %dms grace period to reset handoff state", 
@@ -153,7 +154,6 @@ void od_watchdog_worker(void *arg)
 	       monitoring_check_interval_ms);
 
 	int monitoring_iterations = 0;
-	const int monitoring_check_interval_ms = 100; /* Check 5x per iteration */
 	bool exec_lock_released = false;
 	
 	for (;;) {
