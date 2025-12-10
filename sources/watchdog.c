@@ -172,11 +172,22 @@ void od_watchdog_worker(void *arg)
 			/* Monitor for new instances by trying to acquire control lock */
 			iterations++;
 			
-			/* On first iteration, release ctrl lock to allow new instances to signal */
-			if (iterations == 1) {
+			/* Hold ctrl lock for grace period (10 iterations = 5 seconds) to ensure
+			 * new instances starting immediately after us will be detected */
+			if (iterations <= 10) {
+				if (iterations == 1) {
+					od_log(&instance->logger, "watchdog", NULL, NULL,
+					       "holding control lock for grace period (5 seconds)");
+				}
+				machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL);
+				continue; /* Keep ctrl lock held */
+			}
+			
+			/* After grace period, release ctrl lock on first check */
+			if (iterations == 11) {
 				flock(fd_ctrl, LOCK_UN | LOCK_NB);
 				od_log(&instance->logger, "watchdog", NULL, NULL,
-				       "control lock released, ready to detect new instances");
+				       "grace period complete, control lock released, monitoring for new instances");
 			}
 			
 			/* Try to acquire ctrl lock - if held by another instance, we detected them */
