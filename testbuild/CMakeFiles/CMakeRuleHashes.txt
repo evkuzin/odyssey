@@ -1,0 +1,7 @@
+# Hashes of file build rules.
+3be9b36e91ac9d7d342386b57cec689f CMakeFiles/changelog
+3be9b36e91ac9d7d342386b57cec689f CMakeFiles/libkiwi
+3be9b36e91ac9d7d342386b57cec689f CMakeFiles/libmachinarium
+91d831191f539bea2fe0edd3cae52e08 changelog.Debian.gz
+e2321c8e116637d2c51964075e01cffd third_party/kiwi/kiwi/libkiwi.a
+6244110ca7fd32970c54710e28877d8c third_party/machinarium/sources/libmachinarium.a

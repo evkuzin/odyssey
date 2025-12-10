@@ -576,6 +576,9 @@ static inline void od_system(void *arg)
 	od_instance_t *instance = system->global->instance;
 	od_router_t *router = system->global->router;
 
+	od_log(&instance->logger, "system", NULL, NULL,
+	       "od_system coroutine started");
+
 	/* start cron coroutine */
 	od_cron_t *cron = system->global->cron;
 	int rc;
@@ -608,14 +611,33 @@ static inline void od_system(void *arg)
 			 "failed to bind any listen address");
 		exit(1);
 	}
+	
+	od_log(&instance->logger, "system", NULL, NULL,
+	       "listen servers started, about to run storage watchdogs");
+	
 	od_rules_storages_watchdogs_run(&instance->logger, &router->rules);
+	
+	od_log(&instance->logger, "system", NULL, NULL,
+	       "storage watchdogs completed");
+
+	od_log(&instance->logger, "system", NULL, NULL,
+	       "checking online restart feature flag: %d", 
+	       instance->config.enable_online_restart_feature);
 
 	if (instance->config.enable_online_restart_feature) {
+		od_log(&instance->logger, "system", NULL, NULL,
+		       "online restart feature enabled, invoking watchdog");
+		
 		/* start watchdog coroutine */
 		rc = od_watchdog_invoke(system);
 		if (rc == NOT_OK_RESPONSE) {
+			od_error(&instance->logger, "system", NULL, NULL,
+				 "watchdog invoke returned NOT_OK_RESPONSE");
 			return;
 		}
+		
+		od_log(&instance->logger, "system", NULL, NULL,
+		       "watchdog invoke completed successfully");
 	}
 
 	od_rules_groups_checkers_run(&instance->logger, &router->rules);
@@ -631,12 +653,21 @@ int od_system_start(od_system_t *system, od_global_t *global)
 {
 	system->global = global;
 	od_instance_t *instance = global->instance;
+	
+	od_log(&instance->logger, "system", NULL, NULL,
+	       "creating system machine coroutine");
+	
 	system->machine = machine_create("system", od_system, system);
 	if (system->machine == -1) {
 		od_error(&instance->logger, "system", NULL, NULL,
 			 "failed to create system thread");
 		return -1;
 	}
+	
+	od_log(&instance->logger, "system", NULL, NULL,
+	       "system machine coroutine created successfully (id=%ld)", 
+	       system->machine);
+	
 	return 0;
 }
 

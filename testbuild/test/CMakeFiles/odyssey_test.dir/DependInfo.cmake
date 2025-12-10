@@ -1,0 +1,96 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
+# The set of languages for which implicit dependencies are needed:
+set(CMAKE_DEPENDS_LANGUAGES
+  )
+
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/usr/scratch/evgeny/local/odyssey/sources/address.c" "test/CMakeFiles/odyssey_test.dir/__/sources/address.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/__/sources/address.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/sources/attribute.c" "test/CMakeFiles/odyssey_test.dir/__/sources/attribute.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/__/sources/attribute.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/sources/hba.c" "test/CMakeFiles/odyssey_test.dir/__/sources/hba.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/__/sources/hba.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/sources/hba_reader.c" "test/CMakeFiles/odyssey_test.dir/__/sources/hba_reader.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/__/sources/hba_reader.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/sources/hba_rule.c" "test/CMakeFiles/odyssey_test.dir/__/sources/hba_rule.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/__/sources/hba_rule.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/sources/tdigest.c" "test/CMakeFiles/odyssey_test.dir/__/sources/tdigest.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/__/sources/tdigest.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_accept_cancel.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_accept_cancel.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_accept_cancel.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_accept_timeout.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_accept_timeout.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_accept_timeout.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_advice_keepalive_usr_timeout.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_advice_keepalive_usr_timeout.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_advice_keepalive_usr_timeout.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_cancel.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_cancel.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_cancel.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_create.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_create.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_create.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_rw0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_rw1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_rw2.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw2.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw2.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_rw3.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw3.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw3.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_rw4.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw4.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_rw4.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_shared_create.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_shared_create.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_shared_create.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_shared_rw0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_shared_rw0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_shared_rw0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_shared_rw1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_shared_rw1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_shared_rw1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_shared_rw2.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_shared_rw2.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_shared_rw2.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_channel_timeout.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_timeout.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_channel_timeout.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_client_server0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_client_server1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_client_server2.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server2.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server2.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_client_server_unix_socket.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server_unix_socket.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server_unix_socket.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_client_server_unix_socket_no_msg.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server_unix_socket_no_msg.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_client_server_unix_socket_no_msg.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_condition0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_condition0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_condition0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_config.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_config.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_config.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_connect.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_connect.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_connect.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_connect_cancel0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_connect_cancel0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_connect_cancel0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_connect_cancel1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_connect_cancel1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_connect_cancel1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_connect_timeout.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_connect_timeout.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_connect_timeout.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_context_switch.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_context_switch.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_context_switch.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_coroutine_names.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_coroutine_names.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_coroutine_names.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_create0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_create0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_create0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_create1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_create1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_create1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_eventfd.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_eventfd.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_eventfd.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_getaddrinfo0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_getaddrinfo0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_getaddrinfo0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_getaddrinfo1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_getaddrinfo1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_getaddrinfo1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_getaddrinfo2.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_getaddrinfo2.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_getaddrinfo2.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_init.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_init.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_init.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_io_new.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_io_new.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_io_new.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_join.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_join.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_join.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_producer_consumer0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_producer_consumer0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_producer_consumer0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_producer_consumer1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_producer_consumer1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_producer_consumer1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_producer_consumer2.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_producer_consumer2.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_producer_consumer2.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_read_10mb0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_10mb0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_10mb0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_read_10mb1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_10mb1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_10mb1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_read_10mb2.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_10mb2.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_10mb2.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_read_cancel.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_cancel.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_cancel.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_read_timeout.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_timeout.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_timeout.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_read_var.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_var.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_read_var.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_signal0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_signal0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_signal0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_signal1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_signal1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_signal1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_signal2.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_signal2.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_signal2.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_sleep.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_sleep.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_sleep.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_sleep_cancel0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_sleep_cancel0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_sleep_cancel0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_sleep_yield.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_sleep_yield.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_sleep_yield.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_sleeplock.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_sleeplock.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_sleeplock.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_stat.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_stat.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_stat.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_tls0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_tls_read_10mb0.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_10mb0.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_10mb0.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_tls_read_10mb1.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_10mb1.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_10mb1.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_tls_read_10mb2.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_10mb2.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_10mb2.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_tls_read_multithread.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_multithread.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_multithread.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_tls_read_var.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_var.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_read_var.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_tls_unix_socket.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_unix_socket.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_unix_socket.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_tls_unix_socket_no_msg.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_unix_socket_no_msg.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_tls_unix_socket_no_msg.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_wait_list_notify_after_wait.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_wait_list_notify_after_wait.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_wait_list_notify_after_wait.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_wait_list_one_producer_multiple_consumers.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_wait_list_one_producer_multiple_consumers.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_wait_list_one_producer_multiple_consumers.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_wait_list_one_producer_multiple_consumers_threads.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_wait_list_one_producer_multiple_consumers_threads.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_wait_list_one_producer_multiple_consumers_threads.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/machinarium/test_wait_list_without_notify.c" "test/CMakeFiles/odyssey_test.dir/machinarium/test_wait_list_without_notify.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/machinarium/test_wait_list_without_notify.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/odyssey/test_attribute.c" "test/CMakeFiles/odyssey_test.dir/odyssey/test_attribute.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/odyssey/test_attribute.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/odyssey/test_hba_parse.c" "test/CMakeFiles/odyssey_test.dir/odyssey/test_hba_parse.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/odyssey/test_hba_parse.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/odyssey/test_locks.c" "test/CMakeFiles/odyssey_test.dir/odyssey/test_locks.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/odyssey/test_locks.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/odyssey/test_tdigest.c" "test/CMakeFiles/odyssey_test.dir/odyssey/test_tdigest.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/odyssey/test_tdigest.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/odyssey/test_util.c" "test/CMakeFiles/odyssey_test.dir/odyssey/test_util.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/odyssey/test_util.c.o.d"
+  "/usr/scratch/evgeny/local/odyssey/test/odyssey_test.c" "test/CMakeFiles/odyssey_test.dir/odyssey_test.c.o" "gcc" "test/CMakeFiles/odyssey_test.dir/odyssey_test.c.o.d"
+  )
+
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

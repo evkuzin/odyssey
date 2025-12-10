@@ -23,6 +23,10 @@ void od_watchdog_worker(void *arg)
 {
 	od_instance_t *instance = arg;
 
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "watchdog worker started, locks_dir=%s", 
+	       instance->config.locks_dir == NULL ? ODYSSEY_DEFAULT_LOCK_DIR : instance->config.locks_dir);
+
 	int fd_ctrl = od_get_control_lock(instance->config.locks_dir);
 	if (fd_ctrl == -1) {
 		od_error(
@@ -59,42 +63,105 @@ void od_watchdog_worker(void *arg)
 		return;
 	}
 
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "attempting to acquire control lock (fd=%d)", fd_ctrl);
 	od_dbg_printf_on_dvl_lvl(1, "try to acquire ctrl lock %d\n", fd_ctrl);
+	
+	int ctrl_wait_iterations = 0;
 	for (;;) {
 		if (flock(fd_ctrl, LOCK_EX | LOCK_NB) == 0) {
+			od_log(&instance->logger, "watchdog", NULL, NULL,
+			       "control lock acquired successfully after %d iterations", 
+			       ctrl_wait_iterations);
 			od_dbg_printf_on_dvl_lvl(1, "acquire ctrl lock ok %d\n",
 						 fd_ctrl);
 			break;
 		}
+		ctrl_wait_iterations++;
+		if (ctrl_wait_iterations % 10 == 0) {
+			od_log(&instance->logger, "watchdog", NULL, NULL,
+			       "still waiting for control lock (waited %d iterations, errno=%d)", 
+			       ctrl_wait_iterations, errno);
+		}
 		machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL);
 	}
 
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "attempting to acquire execution lock (fd=%d)", fd_exec);
 	od_dbg_printf_on_dvl_lvl(1, "try to acquire exec lock %d\n", fd_exec);
+	
+	int exec_wait_iterations = 0;
 	for (;;) {
 		if (flock(fd_exec, LOCK_EX | LOCK_NB) == 0) {
+			od_log(&instance->logger, "watchdog", NULL, NULL,
+			       "execution lock acquired successfully after %d iterations", 
+			       exec_wait_iterations);
 			od_dbg_printf_on_dvl_lvl(1, "acquire exec lock ok %d\n",
 						 fd_exec);
 			break;
 		}
+		exec_wait_iterations++;
+		if (exec_wait_iterations % 10 == 0) {
+			od_log(&instance->logger, "watchdog", NULL, NULL,
+			       "still waiting for execution lock (waited %d iterations, errno=%d)", 
+			       exec_wait_iterations, errno);
+		}
 		machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL);
 	}
 
+	/*
+	 * Release control lock and start monitoring for new instances.
+	 * This allows the next instance to detect us and initiate a handoff.
+	 */
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "releasing control lock to allow new instances to detect us");
 	flock(fd_ctrl, LOCK_UN | LOCK_NB);
+	
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "now monitoring for new instances (checking every %dms)", 
+	       ODYSSEY_WATCHDOG_ITER_INTERVAL);
+
+	int monitoring_iterations = 0;
 	for (;;) {
-		if (flock(fd_ctrl, LOCK_EX | LOCK_NB) == -1) {
-			od_dbg_printf_on_dvl_lvl(1, "release exec lock %d\n",
-						 fd_exec);
+		monitoring_iterations++;
+		
+		int lock_result = flock(fd_ctrl, LOCK_EX | LOCK_NB);
+		if (lock_result == -1) {
+			/* Another new instance has started, we need to gracefully shutdown */
+			od_log(&instance->logger, "watchdog", NULL, NULL,
+			       "detected new instance starting (ctrl lock held by new instance, errno=%d), initiating graceful shutdown", 
+			       errno);
+			od_dbg_printf_on_dvl_lvl(1, "failed to acquire ctrl lock (errno: %d), releasing exec lock %d\n",
+						 errno, fd_exec);
 			break;
 		}
 
+		/* We got the lock, which means no new instance is starting yet */
+		od_dbg_printf_on_dvl_lvl(1, "ctrl lock acquired in monitoring loop (iteration %d)\n", 
+					 monitoring_iterations);
+		
+		if (monitoring_iterations % 20 == 0) {
+			od_log(&instance->logger, "watchdog", NULL, NULL,
+			       "still monitoring, no new instance detected (%d checks performed)", 
+			       monitoring_iterations);
+		}
+		
 		flock(fd_ctrl, LOCK_UN | LOCK_NB);
 
 		od_dbg_printf_on_dvl_lvl(1, "watchdog worker sleep for %d ms\n",
 					 ODYSSEY_WATCHDOG_ITER_INTERVAL);
 		machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL);
 	}
+	
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "releasing execution lock for handoff to new instance");
 	flock(fd_exec, LOCK_UN | LOCK_NB);
+	close(fd_exec);
+	close(fd_ctrl);
 
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "watchdog terminating, requesting graceful shutdown of odyssey process");
+	
 	/* request our own process to shutdown  */
 	kill(instance->pid.pid, OD_SIG_GRACEFUL_SHUTDOWN);
 	return;
@@ -104,11 +171,18 @@ od_retcode_t od_watchdog_invoke(od_system_t *system)
 {
 	od_instance_t *instance = system->global->instance;
 
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "starting watchdog coroutine for online restart feature");
+
 	int64_t id = machine_create("watchdog", od_watchdog_worker, instance);
 	if (id == -1) {
-		od_error(&instance->logger, "cron", NULL, NULL,
+		od_error(&instance->logger, "watchdog", NULL, NULL,
 			 "failed to start watchdog coroutine");
 		return NOT_OK_RESPONSE;
 	}
+	
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "watchdog coroutine created successfully (id=%ld)", id);
+	
 	return OK_RESPONSE;
 }
