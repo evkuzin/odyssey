@@ -19,6 +19,12 @@
 #include <attribute.h>
 #include <scram.h>
 #include <util.h>
+
+/* Undefine OPENSSL_API_COMPAT before including PostgreSQL headers to avoid conflict */
+#ifdef OPENSSL_API_COMPAT
+#undef OPENSSL_API_COMPAT
+#endif
+
 #include <od_postgres.h>
 
 #if PG_VERSION_NUM >= 160000
