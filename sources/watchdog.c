@@ -110,6 +110,15 @@ void od_watchdog_worker(void *arg)
 	}
 
 	/*
+	 * Keep holding the control lock for one full iteration to ensure
+	 * the old instance's monitoring loop detects our presence before we release it.
+	 */
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "holding control lock for %dms to signal presence to old instance", 
+	       ODYSSEY_WATCHDOG_ITER_INTERVAL);
+	machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL);
+
+	/*
 	 * Release control lock and start monitoring for new instances.
 	 * This allows the next instance to detect us and initiate a handoff.
 	 */
