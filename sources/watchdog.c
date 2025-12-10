@@ -132,18 +132,44 @@ void od_watchdog_worker(void *arg)
 	/*
 	 * Release control lock and start monitoring for new instances.
 	 * This allows the next instance to detect us and initiate a handoff.
+	 * Keep holding exec lock to maintain exclusive execution rights.
 	 */
 	od_log(&instance->logger, "watchdog", NULL, NULL,
 	       "releasing control lock '%s' to allow new instances to detect us", ctrl_lock_path);
 	flock(fd_ctrl, LOCK_UN | LOCK_NB);
 	
+	/*
+	 * After a grace period (30 seconds), release the exec lock to reset state.
+	 * This ensures subsequent handoffs work identically to the first handoff,
+	 * where the new instance must wait for the exec lock.
+	 */
+	const int exec_lock_grace_period_ms = 30000; /* 30 seconds */
+	od_log(&instance->logger, "watchdog", NULL, NULL,
+	       "will release execution lock after %dms grace period to reset handoff state", 
+	       exec_lock_grace_period_ms);
+	
 	od_log(&instance->logger, "watchdog", NULL, NULL,
 	       "now monitoring for new instances (checking every %dms)", 
-	       ODYSSEY_WATCHDOG_ITER_INTERVAL);
+	       monitoring_check_interval_ms);
 
 	int monitoring_iterations = 0;
+	const int monitoring_check_interval_ms = 100; /* Check 5x per iteration */
+	bool exec_lock_released = false;
+	
 	for (;;) {
 		monitoring_iterations++;
+		
+		/* After grace period, release exec lock to reset state */
+		if (!exec_lock_released && 
+		    (monitoring_iterations * monitoring_check_interval_ms >= exec_lock_grace_period_ms)) {
+			od_log(&instance->logger, "watchdog", NULL, NULL,
+			       "grace period elapsed, releasing execution lock '%s' to reset state", 
+			       exec_lock_path);
+			flock(fd_exec, LOCK_UN | LOCK_NB);
+			exec_lock_released = true;
+			od_log(&instance->logger, "watchdog", NULL, NULL,
+			       "state reset complete - next handoff will behave identically to first handoff");
+		}
 		
 		int lock_result = flock(fd_ctrl, LOCK_EX | LOCK_NB);
 		if (lock_result == -1) {
@@ -160,7 +186,7 @@ void od_watchdog_worker(void *arg)
 		od_dbg_printf_on_dvl_lvl(1, "ctrl lock acquired in monitoring loop (iteration %d)\n", 
 					 monitoring_iterations);
 		
-		if (monitoring_iterations % 20 == 0) {
+		if (monitoring_iterations % 100 == 0) {
 			od_log(&instance->logger, "watchdog", NULL, NULL,
 			       "still monitoring, no new instance detected (%d checks performed)", 
 			       monitoring_iterations);
@@ -170,12 +196,15 @@ void od_watchdog_worker(void *arg)
 		flock(fd_ctrl, LOCK_UN | LOCK_NB);
 
 		od_dbg_printf_on_dvl_lvl(1, "watchdog worker sleep for %d ms\n",
-					 ODYSSEY_WATCHDOG_ITER_INTERVAL);
-		machine_sleep(ODYSSEY_WATCHDOG_ITER_INTERVAL);
+					 monitoring_check_interval_ms);
+		machine_sleep(monitoring_check_interval_ms);
 	}
 	
-	od_log(&instance->logger, "watchdog", NULL, NULL,
-	       "releasing execution lock '%s' for handoff to new instance", exec_lock_path);
+	/* Only release exec lock if we still hold it */
+	if (!exec_lock_released) {
+		od_log(&instance->logger, "watchdog", NULL, NULL,
+		       "releasing execution lock '%s' for handoff to new instance", exec_lock_path);
+	}
 	flock(fd_exec, LOCK_UN | LOCK_NB);
 	close(fd_exec);
 	close(fd_ctrl);
